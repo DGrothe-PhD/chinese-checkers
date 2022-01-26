@@ -12,7 +12,11 @@ import java.io.*;
  */
 public class ChineseCheckersV4 extends Frame
 {
-  public final int BOARD_WIDTH = 25;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+public final int BOARD_WIDTH = 25;
   public final int BOARD_HEIGHT = 17;
   public int board[] [] = new int [BOARD_WIDTH] [BOARD_HEIGHT];
   public Ellipse2D.Double pictureBoard[] [] =
@@ -42,6 +46,8 @@ public class ChineseCheckersV4 extends Frame
   public int puzzleModeLevel = 1;
   public int puzzleModeTurns;
   public final int MAX_PUZZLE_MODE_LEVELS = 10;
+  
+  private BufferedReader inFile;
 
   // For drawing images offScreen (prevents Flicker)
   // These variables keep track of an off screen image object and
@@ -125,7 +131,8 @@ public class ChineseCheckersV4 extends Frame
     // Makes it unresizable and starts a new game
     this.setResizable (false);
     newGame (noOfPlayers);
-    show ();
+    setVisible(true);
+    
   }
 
 
@@ -136,7 +143,7 @@ public class ChineseCheckersV4 extends Frame
   {
     try {
       FileReader fr = new FileReader("PuzzleMode/" + Integer.toString(puzzleModeLevel) + ".txt");
-      BufferedReader inFile = new BufferedReader(fr);
+      inFile = new BufferedReader(fr);
 
       puzzleModeTurns = Integer.parseInt(inFile.readLine());
       for (int index = 1 ; index <= 10 ; index++)
@@ -144,10 +151,14 @@ public class ChineseCheckersV4 extends Frame
         puzzleModewidthPos [index] = Integer.parseInt(inFile.readLine());
         puzzleModeheightPos [index] = Integer.parseInt(inFile.readLine());
       }
+      inFile.close();
     } catch (FileNotFoundException ex) {
       ex.printStackTrace();
     } catch (IOException ex) {
       ex.printStackTrace();
+    }
+    finally {
+    	//inFile.close();
     }
   }
 
@@ -1247,7 +1258,7 @@ public class ChineseCheckersV4 extends Frame
   {
     if (e.target == exitOption)
     {
-      hide ();
+      setVisible(false);
       System.exit (0);
     }
     else if (e.target == howToPlay)
@@ -1308,14 +1319,14 @@ public class ChineseCheckersV4 extends Frame
     // Set up the offscreen buffer the first time paint() is called
     if (offScreenBuffer == null)
     {
-      offScreenImage = createImage (size ().width, size ().height);
+      offScreenImage = createImage (getSize().width, getSize().height);
       offScreenBuffer = offScreenImage.getGraphics ();
     }
 
     // All of the drawing is done to an off screen buffer which is
     // then copied to the screen.  This will prevent flickering
     // Clear the offScreenBuffer first
-    offScreenBuffer.clearRect (0, 0, size ().width, size ().height);
+    offScreenBuffer.clearRect (0, 0, getSize().width, getSize().height);
 
     // Draw the board and the pieces
     for (width = 0 ; width < BOARD_WIDTH ; width++)
@@ -1376,7 +1387,8 @@ public class ChineseCheckersV4 extends Frame
 
 
   // Handles the close button on the window
-  public boolean handleEvent (Event evt)
+  //CHECK experimental: handleEvent deprecated
+  /*public boolean handleEvent (Event evt)
   {
     if (evt.id == Event.WINDOW_DESTROY)
     {
@@ -1387,7 +1399,7 @@ public class ChineseCheckersV4 extends Frame
 
     // If not handled, pass the event along
     return super.handleEvent (evt);
-  }
+  }*/
 
 
   public static void main (String[] args)

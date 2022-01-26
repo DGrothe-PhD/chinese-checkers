@@ -1,7 +1,10 @@
 // The "MultiplayerOptionsWindow" class.
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
-import javax.swing.border.*;
+//import javax.swing.border.*;
 
 /** The "MultiplayerOptionsWindow" class.
   * Purpose: To select the marble types, names and player types of the players
@@ -10,8 +13,12 @@ import javax.swing.border.*;
   */
 public class MultiplayerOptionsWindow extends Frame
 {
-    Button OKButton;
-    Button cancelButton;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -31494534917169113L;
+	JButton OKButton;
+    JButton cancelButton;
     Choice colour1;
     Choice colour2;
     Choice colour3;
@@ -41,10 +48,13 @@ public class MultiplayerOptionsWindow extends Frame
       */
     public MultiplayerOptionsWindow (ChineseCheckersV4 parent)
     {
+    	
 	//Set the name of the window
 	super ("Options");
+	try {
+		
 	this.parent = parent;
-
+	
 	//Make the size of the window based on the number of players
 	if (noOfPlayers <= 3)
 	{
@@ -63,13 +73,22 @@ public class MultiplayerOptionsWindow extends Frame
 
 
 	//Make the OK and Cancel buttons
-	OKButton = new Button ("OK");
+	OKButton = new JButton ("OK");
 	OKButton.setBounds (10, height - 40, 100, 30);
 	add (OKButton);
-	cancelButton = new Button ("Cancel");
+	cancelButton = new JButton ("Cancel");
 	cancelButton.setBounds (120, height - 40, 100, 30);
+	
+	//CHECK experimental
+	cancelButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+            }
+    });
+	
 	add (cancelButton);
-
+	
 	// Set the icon
 	Image image = new ImageIcon ("Pictures/0.gif").getImage ();
 	setIconImage (image);
@@ -77,9 +96,14 @@ public class MultiplayerOptionsWindow extends Frame
 	//Place the objects on the screen
 	CreateNameBoxes ();
 	CreateColourLists ();
+	
 	CreatePics ();
 	this.setResizable (false);
-	show ();
+	setVisible(true);
+    }
+    catch(Exception e) {
+    	System.out.println("An exception was thrown by UI, "+e.toString());
+    }
     }
 
 
@@ -208,10 +232,11 @@ public class MultiplayerOptionsWindow extends Frame
 		finalNames [index] = names [index].getText ();
 	    }
 
-	    parent.setEnabled (true);
-
+	    parent.setEnabled (true);//FIXME
+	    
+	    setVisible(false);//CHECK if the right window is closing
 	    //Close the window
-	    hide ();
+	    
 	    parent.resume (finalColours, finalNames);
 	}
 
@@ -220,7 +245,8 @@ public class MultiplayerOptionsWindow extends Frame
 	{
 	    //Close the window
 	    parent.setEnabled (true);
-	    hide ();
+	    setVisible(false);//CHECK whether dispose is better
+	    
 	}
 
 	//Record which colours they selected
@@ -237,7 +263,8 @@ public class MultiplayerOptionsWindow extends Frame
 
 
     // Handles the close button on the window
-    public boolean handleEvent (Event evt)
+    //CHECK experimental handle event deprecated
+    /*public boolean handleEvent (Event evt)
     {
 	if (evt.id == Event.WINDOW_DESTROY)
 	{
@@ -247,7 +274,7 @@ public class MultiplayerOptionsWindow extends Frame
 	}
 	// If not handled, pass the event along
 	return super.handleEvent (evt);
-    }
+    }*/
 
 
     //Paints the pictures of the marble types on the screen
@@ -268,6 +295,11 @@ public class MultiplayerOptionsWindow extends Frame
     public static void main (String[] args)
     {
 	// Create a MultiplayerOptionsWindow frame
+    try {
 	new MultiplayerOptionsWindow (null);
+    }
+	catch(Exception e){
+		System.out.println("Exception "+e.toString()+" was thrown.");
+	}
     } // main method
 } // MultiplayerOptionsWindow class
