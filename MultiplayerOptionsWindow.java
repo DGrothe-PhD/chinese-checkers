@@ -1,10 +1,8 @@
 // The "MultiplayerOptionsWindow" class.
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 import javax.swing.*;
-//import javax.swing.border.*;
 
 /** The "MultiplayerOptionsWindow" class.
   * Purpose: To select the marble types, names and player types of the players
@@ -83,7 +81,16 @@ public class MultiplayerOptionsWindow extends Frame
 	cancelButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            dispose();
+        	try {
+        	    parent.setEnabled (true);
+        	//Cannot invoke "ChineseCheckersV4.setEnabled(boolean)" because "this.val$parent" is null
+        	}
+        	catch(Exception em) {
+        		System.out.println("MultiplayerOptionsWindow cannot open the CC game, "+em.toString());
+        	}
+        	finally {
+        		dispose();
+        	}
             }
     });
 	
@@ -103,6 +110,7 @@ public class MultiplayerOptionsWindow extends Frame
     }
     catch(Exception e) {
     	System.out.println("An exception was thrown by UI, "+e.toString());
+    	this.dispose();
     }
     }
 
@@ -177,7 +185,8 @@ public class MultiplayerOptionsWindow extends Frame
       * @param evt The event being executed
       * @param arg The object in question
       */
-    public boolean action (Event evt, Object arg)
+    @SuppressWarnings("deprecation")
+	public boolean action (Event evt, Object arg)
     {
 	//If they press the OK button
 	if (evt.target == OKButton)
@@ -232,9 +241,8 @@ public class MultiplayerOptionsWindow extends Frame
 		finalNames [index] = names [index].getText ();
 	    }
 
-	    parent.setEnabled (true);//FIXME
-	    
-	    setVisible(false);//CHECK if the right window is closing
+	    parent.setEnabled (true);
+	    dispose();
 	    //Close the window
 	    
 	    parent.resume (finalColours, finalNames);
@@ -245,7 +253,7 @@ public class MultiplayerOptionsWindow extends Frame
 	{
 	    //Close the window
 	    parent.setEnabled (true);
-	    setVisible(false);//CHECK whether dispose is better
+	    dispose();
 	    
 	}
 
@@ -261,20 +269,6 @@ public class MultiplayerOptionsWindow extends Frame
 	return true;
     }
 
-
-    // Handles the close button on the window
-    //CHECK experimental handle event deprecated
-    /*public boolean handleEvent (Event evt)
-    {
-	if (evt.id == Event.WINDOW_DESTROY)
-	{
-	    parent.setEnabled (true);
-	    setVisible (false);
-	    return true;
-	}
-	// If not handled, pass the event along
-	return super.handleEvent (evt);
-    }*/
 
 
     //Paints the pictures of the marble types on the screen
